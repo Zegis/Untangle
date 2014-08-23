@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include <iostream>
 
 Sprite::Sprite(string imageName)
 {

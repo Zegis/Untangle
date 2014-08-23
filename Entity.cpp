@@ -19,6 +19,12 @@ int Entity::getY()
 	return y;
 }
 
+void Entity::setPosition(int newX, int newY)
+{
+	x = newX;
+	y = newY;
+}
+
 void Entity::setVelocity_X(int newVelocity)
 {
 	velocityX = newVelocity;

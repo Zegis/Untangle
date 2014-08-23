@@ -42,7 +42,8 @@ void Game::Run()
 {
 	ALLEGRO_EVENT currentEvent;
 
-	Entity player("res/Player.png", 50, 50);
+	Entity player("res/player.png", 50, 50);
+	Entity bullet("res/bullet.png", 100, 100);
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 
@@ -85,11 +86,31 @@ void Game::Run()
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_UP || currentEvent.keyboard.keycode == ALLEGRO_KEY_DOWN)
 				player.setVelocity_Y(0);
 		}
+		else if(currentEvent.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && currentEvent.mouse.button == 1)
+		{
+			bullet.setPosition(player.getX(), player.getY());
+
+			std::cout << "Shooting from: " << player.getX() << ", " << player.getY() << "\n";
+			std::cout << "Shooting to: " << currentEvent.mouse.x << ", " << currentEvent.mouse.y << "\n";
+
+			double deltaX = currentEvent.mouse.x - player.getX();
+			double deltaY = currentEvent.mouse.y - player.getY();
+
+			double angleInDegrees = atan2(deltaY, deltaX);
+			double X = cos(angleInDegrees);
+			double Y = sin(angleInDegrees);
+
+			bullet.setVelocity_X(X * 10);
+			bullet.setVelocity_Y(Y * 10);
+
+		}
 		else if(currentEvent.type == ALLEGRO_EVENT_TIMER)
 		{
 			al_clear_to_color(al_map_rgb(0,0,0));
 			player.update();
+			bullet.update();
 			player.draw();
+			bullet.draw();
 			al_flip_display();
 		}
 	}

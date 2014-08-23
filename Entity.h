@@ -11,6 +11,8 @@ public:
 	int getX();
 	int getY();
 
+	void setPosition(int newX, int newY);
+
 	void setVelocity_X(int);
 	void setVelocity_Y(int);
 

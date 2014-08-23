@@ -6,6 +6,8 @@
 #include <allegro5\allegro_image.h>
 #include "Entity.h"
 
+#include <math.h>
+
 class Game
 {
 public:
