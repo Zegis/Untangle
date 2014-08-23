@@ -10,6 +10,9 @@ Game::Game(void)
 	evQueue = al_create_event_queue();
 	eventTimer = al_create_timer(1.0 / 05);
 
+	curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
+	al_set_mouse_cursor(display,curs);
+
 	al_register_event_source(evQueue, al_get_keyboard_event_source());
 	al_register_event_source(evQueue, al_get_mouse_event_source());
 	al_register_event_source(evQueue, al_get_timer_event_source(eventTimer));
@@ -34,6 +37,8 @@ Game::~Game(void)
 	al_destroy_event_queue(evQueue);
 
 	al_destroy_timer(eventTimer);
+
+	al_destroy_mouse_cursor(curs);
 }
 
 
@@ -43,7 +48,6 @@ void Game::Run()
 	ALLEGRO_EVENT currentEvent;
 
 	Entity player("res/player.png", 50, 50);
-	Entity bullet("res/bullet.png", 100, 100);
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 
@@ -64,19 +68,19 @@ void Game::Run()
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
-				player.setVelocity_X(-5);
+				player.setVelocity_X(-10);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_RIGHT)
 			{
-				player.setVelocity_X(5);
+				player.setVelocity_X(10);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_UP)
 			{
-				player.setVelocity_Y(-5);
+				player.setVelocity_Y(-10);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_DOWN)
 			{
-				player.setVelocity_Y(5);
+				player.setVelocity_Y(10);
 			}
 		}
 		else if(currentEvent.type == ALLEGRO_EVENT_KEY_UP)
@@ -88,30 +92,41 @@ void Game::Run()
 		}
 		else if(currentEvent.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && currentEvent.mouse.button == 1)
 		{
-			bullet.setPosition(player.getX(), player.getY());
-
 			std::cout << "Shooting from: " << player.getX() << ", " << player.getY() << "\n";
 			std::cout << "Shooting to: " << currentEvent.mouse.x << ", " << currentEvent.mouse.y << "\n";
 
-			double deltaX = currentEvent.mouse.x - player.getX();
-			double deltaY = currentEvent.mouse.y - player.getY();
-
-			double angleInDegrees = atan2(deltaY, deltaX);
-			double X = cos(angleInDegrees);
-			double Y = sin(angleInDegrees);
-
-			bullet.setVelocity_X(X * 10);
-			bullet.setVelocity_Y(Y * 10);
-
+			bullets.push_back(player.shoot(currentEvent.mouse.x, currentEvent.mouse.y));
+		}
+		else if(currentEvent.type == ALLEGRO_EVENT_MOUSE_AXES)
+		{
+			player.rotate(currentEvent.mouse.x, currentEvent.mouse.y);
 		}
 		else if(currentEvent.type == ALLEGRO_EVENT_TIMER)
 		{
 			al_clear_to_color(al_map_rgb(0,0,0));
 			player.update();
-			bullet.update();
 			player.draw();
-			bullet.draw();
+
+			list<Entity*>::iterator it = bullets.begin();
+			while( it != bullets.end())
+			{
+				(*it)->update();
+
+				if( (*it)->disposable())
+				{
+					delete (*it);
+					bullets.erase(it++);
+				}
+				else
+				{
+					(*it)->draw();
+					++it;
+				}
+			}
+
 			al_flip_display();
 		}
 	}
+
+
 }

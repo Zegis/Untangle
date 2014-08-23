@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Sprite.h";
+#include "Sprite.h"
+#include <math.h>
 
 class Entity
 {
@@ -8,22 +9,30 @@ public:
 	Entity(string imageName, int position_X, int position_Y);
 	~Entity(void);
 
-	int getX();
-	int getY();
+	double getX();
+	double getY();
 
 	void setPosition(int newX, int newY);
 
-	void setVelocity_X(int);
-	void setVelocity_Y(int);
+	void setVelocity_X(double);
+	void setVelocity_Y(double);
 
 	void draw();
 
 	void update();
 
-private:
-	int x, y;
-	int velocityX, velocityY;
+	Entity* shoot(int toX, int toY);
 
+	bool disposable();
+
+	void rotate(int toX, int toY);
+
+private:
+	double x, y;
+	double velocityX, velocityY;
+
+	float angle;
+	
 	Sprite image;
 };
 

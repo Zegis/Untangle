@@ -7,6 +7,9 @@
 #include "Entity.h"
 
 #include <math.h>
+#include <list>
+
+using std::list;
 
 class Game
 {
@@ -22,6 +25,10 @@ private:
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* evQueue;
 	ALLEGRO_TIMER* eventTimer;
+
+	ALLEGRO_MOUSE_CURSOR* curs;
+
+	list<Entity*> bullets;
 
 	bool InitializeAllegro();
 };

@@ -32,5 +32,6 @@ int Sprite::getWidth()
 
 Sprite::~Sprite(void)
 {
+	std::cout << "Destroy! \n";
 	al_destroy_bitmap(image);
 }
