@@ -39,7 +39,7 @@ void Entity::setVelocity_Y(double newVelocity)
 
 void Entity::draw()
 {
-	al_draw_rotated_bitmap(image.getImage(), image.getWidth()/2, image.getHeight(),  x, y, angle ,0);
+	al_draw_rotated_bitmap(image.getImage(), image.getWidth()/2, image.getHeight()/2,  x, y, angle ,0);
 }
 
 void Entity::update()
