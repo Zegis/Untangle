@@ -33,6 +33,7 @@ public:
 	void rotate(int toX, int toY);
 
 	bool isPickUp();
+	int getPickUp_ID();
 
 	void hit();
 

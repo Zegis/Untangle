@@ -27,6 +27,8 @@ private:
 	void GameBriefing();
 	void GameLoop();
 
+	void DisconnectWorlds(int worldToDisconnect);
+
 	int connectedWorlds;
 
 	ALLEGRO_DISPLAY* display;

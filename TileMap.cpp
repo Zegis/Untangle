@@ -157,9 +157,11 @@ Entity* TileMap::checkCollisions(Entity* objectToCheck)
 		if( x0 < x1 + (*it)->getWidth() &&
 			x1 < x0 + objectToCheck->getWidth() &&
 			y0 < y1 + (*it)->getHeight() &&
-			y1 < y0 + objectToCheck->getHeight() &&
-			(*it)->isPickUp() == objectToCheck->isPlayer())
+			y1 < y0 + objectToCheck->getHeight())
+		{
+			if(objectToCheck->isPlayer() || !(*it)->isPickUp())
 				return (*it);
+		}
 
 		it++;
 	}
@@ -180,4 +182,21 @@ list<Entity*>::iterator TileMap::getFirstObject()
 list<Entity*>::iterator TileMap::getLastObject()
 {
 	return objectsOnMap.end();
+}
+
+void TileMap::disconnectWorld(int worldToDisconnect)
+{
+	for(int i=0; i<16; ++i)
+		for(int j=0; j<12; ++j)
+		{
+			if(worldToDisconnect == 2)
+			{
+				if(tiles[i][j] == fire) tiles[i][j] = water;
+			}
+			else if(worldToDisconnect == 3)
+			{
+				if(tiles[i][j] == grass) tiles[i][j] = water;
+			}
+		}
+
 }

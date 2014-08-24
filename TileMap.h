@@ -22,6 +22,8 @@ public:
 
 	ALLEGRO_BITMAP* getTile(int x, int y);
 
+	void disconnectWorld(int worldToDisconnect);
+
 private:
 	list<Entity*> objectsOnMap;
 

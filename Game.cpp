@@ -7,10 +7,11 @@ Game::Game(void)
 	{
 		std::cout << "Allegro initialized! \n";
 
-		connectedWorlds = 3;
+		connectedWorlds = 4;
 
 		player = new Entity("res/player.png", 50, 50);
 		player->setPlayer();
+		player->setMaxHp(1);
 		map = new TileMap();
 
 		worlds = new WorldMap();
@@ -115,6 +116,8 @@ void Game::GameLoop()
 	al_hold_bitmap_drawing(false);
 	al_flip_display();
 
+	Entity* objectThatCollides;
+
 	while(true)
 	{
 		al_wait_for_event(evQueue, &currentEvent);
@@ -170,6 +173,29 @@ void Game::GameLoop()
 			al_hold_bitmap_drawing(true);
 			map->draw();
 			player->update();
+
+			objectThatCollides = map->checkCollisions(player);
+			if(objectThatCollides != NULL)
+			{
+				if(objectThatCollides->isPickUp())
+				{
+					// PICK IT UP, GODDAMIT!
+					std::cout << "Something picked up!";
+					objectThatCollides->setDisposable();
+					DisconnectWorlds(objectThatCollides->getPickUp_ID());
+					break;
+				}
+				else
+				{
+					player->hit();
+					if(player->isDisposable())
+					{
+						std::cout << "UR DEAD!";
+						break;
+					}
+				}
+			}
+
 			player->draw();
 
 			list<Entity*>::iterator it = bullets.begin();
@@ -177,7 +203,7 @@ void Game::GameLoop()
 			{
 				(*it)->update();
 
-				Entity* objectThatCollides = map->checkCollisions((*it));
+				objectThatCollides = map->checkCollisions((*it));
 
 				if (objectThatCollides != NULL)
 				{
@@ -201,4 +227,27 @@ void Game::GameLoop()
 			al_flip_display();
 		}
 	}
+	al_hold_bitmap_drawing(false);
+}
+
+void Game::DisconnectWorlds(int worldToDisconnect)
+{
+
+	if(worldToDisconnect == 3)
+		connectedWorlds = 2;
+	else
+		connectedWorlds = 3;
+
+	map->disconnectWorld(worldToDisconnect);
+
+	al_hold_bitmap_drawing(false);
+	worlds->draw(connectedWorlds);
+	al_flip_display();
+
+	std::cin.get();
+
+	map->draw();
+	al_flip_display();
+
+	std::cin.get();
 }

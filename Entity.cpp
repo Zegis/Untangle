@@ -49,6 +49,11 @@ bool Entity::isPickUp()
 		return false;
 }
 
+int Entity::getPickUp_ID()
+{
+	return pickUp;
+}
+
 void Entity::hit()
 {
 	--hp;
