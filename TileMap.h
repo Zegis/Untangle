@@ -18,6 +18,8 @@ public:
 
 	void draw();
 
+	Entity* checkCollisions(Entity* objectToCheck);
+
 	ALLEGRO_BITMAP* getTile(int x, int y);
 
 private:

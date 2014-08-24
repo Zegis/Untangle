@@ -7,6 +7,7 @@ class Entity
 {
 public:
 	Entity(string imageName, int position_X, int position_Y);
+	Entity(string imageName, int position_X, int position_Y, int pickupId);
 	~Entity(void);
 
 	double getX();
@@ -30,7 +31,11 @@ public:
 
 	void rotate(int toX, int toY);
 
+	bool isPickUp();
+
 private:
+
+	int pickUp;
 	double x, y;
 	double velocityX, velocityY;
 

@@ -9,6 +9,28 @@ Entity::Entity(string imageName, int position_X, int position_Y): image(imageNam
 	velocityX = velocityY = 0;
 
 	angle = 0;
+
+	pickUp = 0;
+}
+
+Entity::Entity(string imageName, int position_X, int position_Y, int pickupId): image(imageName)
+{
+	x = position_X;
+	y = position_Y;
+
+	velocityX = velocityY = 0;
+
+	angle = 0;
+
+	pickUp = pickupId;
+}
+
+bool Entity::isPickUp()
+{
+	if(pickUp != 0)
+		return true;
+	else
+		return false;
 }
 
 double Entity::getX()

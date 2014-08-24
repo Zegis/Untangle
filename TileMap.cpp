@@ -81,21 +81,27 @@ void TileMap::loadObjects(string mapName)
 
 	while(getline(mapFile,line))
 	{
+		firstComma = line.find(',');
+		lastComma = line.find(',',firstComma+1);
+			
+		x = std::atoi(line.substr(firstComma+1,lastComma).c_str());
+		y = std::atoi(line.substr(lastComma+1).c_str());
+
 		if(line[0] == 'k')
 		{
-			firstComma = line.find(',');
-			lastComma = line.find(',',firstComma+1);
 			
-			x = std::atoi(line.substr(firstComma+1,lastComma).c_str());
-			y = std::atoi(line.substr(lastComma+1).c_str());
 			if(line[1] == '2')
 			{
-				objectsOnMap.push_back(new Entity("res/Key_2.png",x*50, y*50));
+				objectsOnMap.push_back(new Entity("res/Key_2.png",x*50, y*50,2));
 			}
 			else if(line[1] == '3')
 			{
-				objectsOnMap.push_back(new Entity("res/Key_3.png",x*50, y*50));
+				objectsOnMap.push_back(new Entity("res/Key_3.png",x*50, y*50,3));
 			}
+		}
+		else if(line[0] == '@')
+		{
+			objectsOnMap.push_back(new Entity("res/enemy.png",x*50,y*50));
 		}
 	}
 
@@ -114,6 +120,23 @@ void TileMap::draw()
 		(*it)->draw();
 		it++;
 	}
+}
+
+Entity* TileMap::checkCollisions(Entity* objectToCheck)
+{
+	int x0 = objectToCheck->getX();
+	int y0 = objectToCheck->getY();
+	int x1 = objectToCheck->getWidth() + x0;
+	int y1 = objectToCheck->getHeight() + y0;
+
+	list<Entity*>::iterator it = objectsOnMap.begin();
+	while(it != objectsOnMap.end())
+	{
+
+		it++;
+	}
+
+	return NULL;
 }
 
 ALLEGRO_BITMAP* TileMap::getTile(int x, int y)
