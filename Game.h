@@ -27,6 +27,8 @@ private:
 	void GameBriefing();
 	void GameLoop();
 
+	int connectedWorlds;
+
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* evQueue;
 	ALLEGRO_TIMER* eventTimer;

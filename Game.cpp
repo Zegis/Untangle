@@ -4,26 +4,32 @@
 Game::Game(void)
 {
 	if(InitializeAllegro())
+	{
 		std::cout << "Allegro initialized! \n";
 
-	player = new Entity("res/player.png", 50, 50);
-	map = new TileMap();
+		connectedWorlds = 3;
 
-	worlds = new WorldMap();
+		player = new Entity("res/player.png", 50, 50);
+		map = new TileMap();
 
-	display = al_create_display(800,600);
-	evQueue = al_create_event_queue();
-	eventTimer = al_create_timer(1.0 / 60);
+		worlds = new WorldMap();
 
-	curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
-	al_set_mouse_cursor(display,curs);
+		display = al_create_display(800,600);
+		evQueue = al_create_event_queue();
+		eventTimer = al_create_timer(1.0 / 60);
 
-	al_register_event_source(evQueue, al_get_keyboard_event_source());
-	al_register_event_source(evQueue, al_get_mouse_event_source());
-	al_register_event_source(evQueue, al_get_timer_event_source(eventTimer));
-	al_register_event_source(evQueue, al_get_display_event_source(display));
+		curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
+		al_set_mouse_cursor(display,curs);
 
-	al_set_window_title(display,"Untangle!");
+		al_register_event_source(evQueue, al_get_keyboard_event_source());
+		al_register_event_source(evQueue, al_get_mouse_event_source());
+		al_register_event_source(evQueue, al_get_timer_event_source(eventTimer));
+		al_register_event_source(evQueue, al_get_display_event_source(display));
+
+		al_set_window_title(display,"Untangle!");
+	}
+	else
+		std::cout << " Error initializing allegro";
 }
 
 bool Game::InitializeAllegro(void)
@@ -57,6 +63,11 @@ Game::~Game(void)
 			bullets.erase(it++);
 		}
 	}
+
+	delete player;
+	delete map;
+	delete worlds;
+
 }
 
 
@@ -79,7 +90,7 @@ void Game::Run()
 
 void Game::GameBriefing()
 {
-	worlds->draw();
+	worlds->draw(connectedWorlds);
 
 	al_flip_display();
 
@@ -87,7 +98,7 @@ void Game::GameBriefing()
 
 	do
 		al_wait_for_event(evQueue, &ev);
-		while(ev.type != ALLEGRO_EVENT_KEY_CHAR && ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN);
+	while(ev.type != ALLEGRO_EVENT_KEY_CHAR && ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN);
 }
 
 void Game::GameLoop()
@@ -153,22 +164,14 @@ void Game::GameLoop()
 		else if(al_is_event_queue_empty(evQueue))
 		{
 
-			
-			// GET TILE UNDER ELEMENT AND REDRAW IT!!!
-
 			al_hold_bitmap_drawing(true);
 			map->draw();
-			//map->draw(player->getX(), player->getY(), player->getHeight(), player->getWidth());
 			player->update();
-
-			//map->draw(player->getX(), player->getY(), player->getHeight(), player->getWidth());
-
 			player->draw();
 
 			list<Entity*>::iterator it = bullets.begin();
 			while( it != bullets.end())
 			{
-		//		map->draw((*it)->getX(),(*it)->getY());
 				(*it)->update();
 
 				if( (*it)->disposable())
@@ -179,7 +182,6 @@ void Game::GameLoop()
 				else
 				{
 					(*it)->draw();
-//					map->draw((*it)->getX(),(*it)->getY());
 					++it;
 				}
 			}

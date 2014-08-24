@@ -17,7 +17,6 @@ public:
 	void LoadMap(string mapName);
 
 	void draw();
-	void draw(int x, int y, int height, int width);
 
 	ALLEGRO_BITMAP* getTile(int x, int y);
 
@@ -25,12 +24,13 @@ private:
 	list<Entity*> objectsOnMap;
 
 	ALLEGRO_BITMAP* water;
-
-	ALLEGRO_BITMAP* blank;
+	ALLEGRO_BITMAP* grass;
 
 	ALLEGRO_BITMAP* tiles[16][12];
 
 	void loadTiles(string mapName);
 	void loadObjects(string mapName);
+
+	static bool RemoveAll(Entity* value);
 };
 

@@ -18,7 +18,9 @@ void WorldMap::draw()
 
 void WorldMap::draw(int connectedWorld)
 {
-	if(connectedWorld == 2)
+	if(connectedWorld == 3)
+		al_draw_bitmap(tangledWorlds,0,0,0);
+	else if(connectedWorld == 2)
 		al_draw_bitmap(connectedWorlds_1_2,0,0,0);
 	else if(connectedWorld == 3)
 		al_draw_bitmap(connectedWorlds_1_3,0,0,0);
