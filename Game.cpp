@@ -68,6 +68,8 @@ Game::~Game(void)
 	delete map;
 	delete worlds;
 
+	std::cin.get();
+
 }
 
 
@@ -174,7 +176,12 @@ void Game::GameLoop()
 			{
 				(*it)->update();
 
-				if( (*it)->disposable())
+				if (map->checkCollisions((*it)) != NULL)
+				{
+					(*it)->setDisposable();					
+				}
+
+				if( (*it)->isDisposable())
 				{
 					delete (*it);
 					bullets.erase(it++);

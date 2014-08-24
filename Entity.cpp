@@ -11,6 +11,8 @@ Entity::Entity(string imageName, int position_X, int position_Y): image(imageNam
 	angle = 0;
 
 	pickUp = 0;
+
+	disposable = false;
 }
 
 Entity::Entity(string imageName, int position_X, int position_Y, int pickupId): image(imageName)
@@ -23,6 +25,8 @@ Entity::Entity(string imageName, int position_X, int position_Y, int pickupId): 
 	angle = 0;
 
 	pickUp = pickupId;
+
+	disposable = false;
 }
 
 bool Entity::isPickUp()
@@ -78,14 +82,14 @@ void Entity::update()
 {
 	x += velocityX;
 	y += velocityY;
+
+	if(x < 0 || x > 800 || y < 0 || y > 600)
+		disposable = true;
 }
 
-bool Entity::disposable()
+bool Entity::isDisposable()
 {
-	if(x < 0 || x > 800 || y < 0 || y > 600)
-		return true;
-	else
-		return false;
+	return disposable;
 }
 
 Entity* Entity::shoot(int toX, int toY)
@@ -101,6 +105,11 @@ Entity* Entity::shoot(int toX, int toY)
 	bullet->setVelocity_Y(sin(angle)*15);
 
 	return bullet;
+}
+
+void Entity::setDisposable()
+{
+	disposable = true;
 }
 
 void Entity::rotate(int toX, int toY)

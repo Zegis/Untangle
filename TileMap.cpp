@@ -53,11 +53,11 @@ void TileMap::loadTiles(string mapName)
 					mapFile.read(tile,2);
 				}
 
-				if(std::strcmp(tile,".1\0") == 0)
+				if(std::strcmp(tile,".1") == 0)
 					tiles[i][j] = water;
 				else if(strcmp(tile,".2") == 0)
 					tiles[i][j] = fire;
-				else if(std::strcmp(tile,".3\0")==0)
+				else if(std::strcmp(tile,".3")==0)
 					tiles[i][j] = grass;
 			}
 		}
@@ -126,12 +126,26 @@ Entity* TileMap::checkCollisions(Entity* objectToCheck)
 {
 	int x0 = objectToCheck->getX();
 	int y0 = objectToCheck->getY();
-	int x1 = objectToCheck->getWidth() + x0;
-	int y1 = objectToCheck->getHeight() + y0;
+	int x1 = 0;
+	int y1 = 0;
+
+	int width, height;
 
 	list<Entity*>::iterator it = objectsOnMap.begin();
 	while(it != objectsOnMap.end())
 	{
+
+		x1 = (*it)->getX();
+		y1 = (*it)->getY();
+		width = (*it)->getWidth();
+		height  = (*it)->getHeight();
+
+		if( x0 < x1 + (*it)->getWidth() &&
+			x1 < x0 + objectToCheck->getWidth() &&
+			y0 < y1 + (*it)->getHeight() &&
+			y1 < y0 + objectToCheck->getHeight() &&
+			!(*it)->isPickUp())
+				return (*it);
 
 		it++;
 	}

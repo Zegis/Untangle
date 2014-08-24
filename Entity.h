@@ -27,13 +27,16 @@ public:
 
 	Entity* shoot(int toX, int toY);
 
-	bool disposable();
+	void setDisposable();
+	bool isDisposable();
 
 	void rotate(int toX, int toY);
 
 	bool isPickUp();
 
 private:
+
+	bool disposable;
 
 	int pickUp;
 	double x, y;
