@@ -9,6 +9,7 @@ TileMap::TileMap(void)
 {
 	water = al_load_bitmap("res/water.png");
 	grass = al_load_bitmap("res/grass.png");
+	fire = al_load_bitmap("res/fire.png");
 }
 
 
@@ -16,6 +17,7 @@ TileMap::~TileMap(void)
 {
 	al_destroy_bitmap(water);
 	al_destroy_bitmap(grass);
+	al_destroy_bitmap(fire);
 
 	objectsOnMap.remove_if(RemoveAll);
 }
@@ -53,6 +55,8 @@ void TileMap::loadTiles(string mapName)
 
 				if(std::strcmp(tile,".1\0") == 0)
 					tiles[i][j] = water;
+				else if(strcmp(tile,".2") == 0)
+					tiles[i][j] = fire;
 				else if(std::strcmp(tile,".3\0")==0)
 					tiles[i][j] = grass;
 			}

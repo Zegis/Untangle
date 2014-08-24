@@ -25,6 +25,7 @@ private:
 
 	ALLEGRO_BITMAP* water;
 	ALLEGRO_BITMAP* grass;
+	ALLEGRO_BITMAP* fire;
 
 	ALLEGRO_BITMAP* tiles[16][12];
 
