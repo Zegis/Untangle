@@ -10,6 +10,7 @@ Game::Game(void)
 		connectedWorlds = 3;
 
 		player = new Entity("res/player.png", 50, 50);
+		player->setPlayer();
 		map = new TileMap();
 
 		worlds = new WorldMap();

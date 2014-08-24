@@ -36,9 +36,16 @@ public:
 
 	void hit();
 
+	void setMaxHp(int maxHP);
+
+	bool isPlayer();
+	void setPlayer();
+
 private:
 
 	bool disposable;
+
+	bool player;
 
 	int hp;
 

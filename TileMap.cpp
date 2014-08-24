@@ -102,6 +102,12 @@ void TileMap::loadObjects(string mapName)
 		else if(line[0] == '@')
 		{
 			objectsOnMap.push_back(new Entity("res/enemy.png",x*50,y*50));
+			objectsOnMap.back()->setMaxHp(2);
+		}
+		else if(line[0] == '#')
+		{
+			objectsOnMap.push_back(new Entity("res/enemy2.png",x*50,y*50));
+			objectsOnMap.back()->setMaxHp(3);
 		}
 	}
 
@@ -152,7 +158,7 @@ Entity* TileMap::checkCollisions(Entity* objectToCheck)
 			x1 < x0 + objectToCheck->getWidth() &&
 			y0 < y1 + (*it)->getHeight() &&
 			y1 < y0 + objectToCheck->getHeight() &&
-			!(*it)->isPickUp())
+			(*it)->isPickUp() == objectToCheck->isPlayer())
 				return (*it);
 
 		it++;

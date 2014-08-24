@@ -13,7 +13,7 @@ Entity::Entity(string imageName, int position_X, int position_Y): image(imageNam
 	pickUp = 0;
 
 	hp = 2;
-
+	player = false;
 	disposable = false;
 }
 
@@ -27,8 +27,18 @@ Entity::Entity(string imageName, int position_X, int position_Y, int pickupId): 
 	angle = 0;
 
 	pickUp = pickupId;
-
+	player = false;
 	disposable = false;
+}
+
+void Entity::setPlayer()
+{
+	player = true;
+}
+
+bool Entity::isPlayer()
+{
+	return player;
 }
 
 bool Entity::isPickUp()
@@ -44,6 +54,11 @@ void Entity::hit()
 	--hp;
 	if(hp == 0)
 		disposable = true;
+}
+
+void Entity::setMaxHp(int maxHp)
+{
+	hp = maxHp;
 }
 
 double Entity::getX()
