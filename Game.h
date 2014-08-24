@@ -6,6 +6,7 @@
 #include <allegro5\allegro_image.h>
 #include "Entity.h"
 #include "TileMap.h"
+#include "WorldMap.h"
 
 #include <math.h>
 #include <list>
@@ -23,6 +24,7 @@ public:
 
 private:
 
+	void GameBriefing();
 	void GameLoop();
 
 	ALLEGRO_DISPLAY* display;
@@ -36,6 +38,8 @@ private:
 	Entity*	player;
 
 	TileMap* map;
+
+	WorldMap* worlds;
 
 	bool InitializeAllegro();
 };
