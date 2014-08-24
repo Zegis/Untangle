@@ -34,9 +34,13 @@ public:
 
 	bool isPickUp();
 
+	void hit();
+
 private:
 
 	bool disposable;
+
+	int hp;
 
 	int pickUp;
 	double x, y;

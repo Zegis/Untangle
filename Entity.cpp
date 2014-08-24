@@ -12,6 +12,8 @@ Entity::Entity(string imageName, int position_X, int position_Y): image(imageNam
 
 	pickUp = 0;
 
+	hp = 2;
+
 	disposable = false;
 }
 
@@ -35,6 +37,13 @@ bool Entity::isPickUp()
 		return true;
 	else
 		return false;
+}
+
+void Entity::hit()
+{
+	--hp;
+	if(hp == 0)
+		disposable = true;
 }
 
 double Entity::getX()

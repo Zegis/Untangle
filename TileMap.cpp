@@ -117,8 +117,16 @@ void TileMap::draw()
 	list<Entity*>::iterator it = objectsOnMap.begin();
 	while(it != objectsOnMap.end())
 	{
-		(*it)->draw();
-		it++;
+		if( !(*it)->isDisposable())
+		{
+			(*it)->draw();
+			it++;
+		}
+		else
+		{
+			delete (*it);
+			objectsOnMap.erase(it++);
+		}
 	}
 }
 

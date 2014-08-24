@@ -176,8 +176,11 @@ void Game::GameLoop()
 			{
 				(*it)->update();
 
-				if (map->checkCollisions((*it)) != NULL)
+				Entity* objectThatCollides = map->checkCollisions((*it));
+
+				if (objectThatCollides != NULL)
 				{
+					objectThatCollides->hit();
 					(*it)->setDisposable();					
 				}
 
