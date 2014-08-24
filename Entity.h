@@ -12,6 +12,9 @@ public:
 	double getX();
 	double getY();
 
+	int getWidth();
+	int getHeight();
+
 	void setPosition(int newX, int newY);
 
 	void setVelocity_X(double);

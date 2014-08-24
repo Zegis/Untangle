@@ -11,7 +11,7 @@ Game::Game(void)
 
 	display = al_create_display(800,600);
 	evQueue = al_create_event_queue();
-	eventTimer = al_create_timer(1.0 / 3);
+	eventTimer = al_create_timer(1.0 / 60);
 
 	curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
 	al_set_mouse_cursor(display,curs);
@@ -19,6 +19,8 @@ Game::Game(void)
 	al_register_event_source(evQueue, al_get_keyboard_event_source());
 	al_register_event_source(evQueue, al_get_mouse_event_source());
 	al_register_event_source(evQueue, al_get_timer_event_source(eventTimer));
+
+	al_set_window_title(display,"Untangle!");
 }
 
 bool Game::InitializeAllegro(void)
@@ -60,8 +62,7 @@ void Game::Run()
 {
 	al_set_target_bitmap(al_get_backbuffer(display));
 
-	player->draw();
-	al_flip_display();
+
 
 	std::cout << "I'm loading map01.txt\n";
 
@@ -76,6 +77,10 @@ void Game::GameLoop()
 {
 	ALLEGRO_EVENT currentEvent;
 	al_start_timer(eventTimer);
+
+	player->draw();
+	map->draw();
+	al_flip_display();
 
 	while(true)
 	{
@@ -122,21 +127,25 @@ void Game::GameLoop()
 		{
 			player->rotate(currentEvent.mouse.x, currentEvent.mouse.y);
 		}
-		else if(currentEvent.type == ALLEGRO_EVENT_TIMER)
+		else if(al_is_event_queue_empty(evQueue))
 		{
-			al_clear_to_color(al_map_rgb(0,0,0));
-			
-			for(int i=0; i<16; ++i)
-				for(int j=0; j<12; ++j)
-					al_draw_bitmap(map->getTile(i,j),i*50,j*50,0);
 
-			std::cout << "Finished drawing map!\n";
+			
+			// GET TILE UNDER ELEMENT AND REDRAW IT!!!
+
+			al_hold_bitmap_drawing(true);
+			map->draw();
+			//map->draw(player->getX(), player->getY(), player->getHeight(), player->getWidth());
 			player->update();
+
+			//map->draw(player->getX(), player->getY(), player->getHeight(), player->getWidth());
+
 			player->draw();
 
 			list<Entity*>::iterator it = bullets.begin();
 			while( it != bullets.end())
 			{
+		//		map->draw((*it)->getX(),(*it)->getY());
 				(*it)->update();
 
 				if( (*it)->disposable())
@@ -147,11 +156,12 @@ void Game::GameLoop()
 				else
 				{
 					(*it)->draw();
+//					map->draw((*it)->getX(),(*it)->getY());
 					++it;
 				}
 			}
 
-			
+			al_hold_bitmap_drawing(false);
 			al_flip_display();
 		}
 	}

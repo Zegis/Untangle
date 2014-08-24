@@ -21,6 +21,16 @@ double Entity::getY()
 	return y;
 }
 
+int Entity::getHeight()
+{
+	return image.getHeight();
+}
+
+int Entity::getWidth()
+{
+	return image.getWidth();
+}
+
 void Entity::setPosition(int newX, int newY)
 {
 	x = newX;
