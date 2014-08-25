@@ -4,6 +4,8 @@
 
 #include <allegro5\allegro5.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_font.h>
+#include <allegro5\allegro_ttf.h>
 #include "Entity.h"
 #include "TileMap.h"
 #include "WorldMap.h"
@@ -27,6 +29,9 @@ private:
 	void GameBriefing();
 	void GameLoop();
 
+	void GameWin();
+	void GameLost();
+
 	void DisconnectWorlds(int worldToDisconnect);
 
 	int connectedWorlds;
@@ -34,6 +39,10 @@ private:
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* evQueue;
 	ALLEGRO_TIMER* eventTimer;
+
+	ALLEGRO_FONT* font;
+
+	int Worldcounter;
 
 	ALLEGRO_MOUSE_CURSOR* curs;
 

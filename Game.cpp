@@ -9,6 +9,8 @@ Game::Game(void)
 
 		connectedWorlds = 4;
 
+		Worldcounter = 2;
+
 		player = new Entity("res/player.png", 50, 50);
 		player->setPlayer();
 		player->setMaxHp(1);
@@ -22,6 +24,8 @@ Game::Game(void)
 
 		curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
 		al_set_mouse_cursor(display,curs);
+
+		font = al_load_ttf_font("res/pirulen.ttf",18,0);
 
 		al_register_event_source(evQueue, al_get_keyboard_event_source());
 		al_register_event_source(evQueue, al_get_mouse_event_source());
@@ -41,6 +45,8 @@ bool Game::InitializeAllegro(void)
 	al_install_mouse();
 
 	al_init_image_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
 
 	return true;
 }
@@ -56,6 +62,8 @@ Game::~Game(void)
 
 	al_destroy_mouse_cursor(curs);
 
+	al_destroy_font(font);
+
 	if(!bullets.empty())
 	{
 		list<Entity*>::iterator it = bullets.begin();
@@ -69,9 +77,6 @@ Game::~Game(void)
 	delete player;
 	delete map;
 	delete worlds;
-
-	std::cin.get();
-
 }
 
 
@@ -95,6 +100,12 @@ void Game::Run()
 void Game::GameBriefing()
 {
 	worlds->draw(connectedWorlds);
+
+	al_draw_text(font, al_map_rgb(255,255,255), 180, 35, 0, "Welcome to Tangled Worlds!");
+
+	al_draw_text(font, al_map_rgb(255,255,255), 60, 145, 0, "Use arrows to move, and mouse to shoot!");
+	al_draw_text(font, al_map_rgb(255,255,255), 60, 450, 0, "Avoid strange monsters from other worlds!");
+	al_draw_text(font, al_map_rgb(255,255,255), 20, 550, 0, "Collect keys to close connections between worlds!");
 
 	al_flip_display();
 
@@ -179,11 +190,21 @@ void Game::GameLoop()
 			{
 				if(objectThatCollides->isPickUp())
 				{
-					// PICK IT UP, GODDAMIT!
 					std::cout << "Something picked up!";
+					--Worldcounter;
 					objectThatCollides->setDisposable();
+					if(Worldcounter > 0)
+					{
 					DisconnectWorlds(objectThatCollides->getPickUp_ID());
-					break;
+
+					player->setVelocity_X(0);
+					player->setVelocity_Y(0);
+					}
+					else
+					{
+						GameWin();
+						break;
+					}
 				}
 				else
 				{
@@ -191,6 +212,7 @@ void Game::GameLoop()
 					if(player->isDisposable())
 					{
 						std::cout << "UR DEAD!";
+						GameLost();
 						break;
 					}
 				}
@@ -241,13 +263,51 @@ void Game::DisconnectWorlds(int worldToDisconnect)
 	map->disconnectWorld(worldToDisconnect);
 
 	al_hold_bitmap_drawing(false);
+	
 	worlds->draw(connectedWorlds);
+	al_draw_text(font, al_map_rgb(255,255,255), 210, 150, 0, "You closed one connection!");
+	al_draw_text(font, al_map_rgb(255,255,255), 315, 500, 0, "Click to exit!");
 	al_flip_display();
 
-	std::cin.get();
+	ALLEGRO_EVENT ev;
 
-	map->draw();
+	do
+		al_wait_for_event(evQueue, &ev);
+	while(ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN);
+}
+
+void Game::GameWin()
+{
+	al_hold_bitmap_drawing(false);
+	worlds->draw(Worldcounter);
+
+	al_draw_text(font, al_map_rgb(255,255,255), 340, 150, 0, "You WON!");
+	al_draw_text(font, al_map_rgb(255,255,255), 315, 500, 0, "Click to exit!");
 	al_flip_display();
 
-	std::cin.get();
+	ALLEGRO_EVENT ev;
+
+	
+
+	do
+		al_wait_for_event(evQueue, &ev);
+	while(ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN);
+}
+
+void Game::GameLost()
+{
+	al_hold_bitmap_drawing(false);
+	worlds->draw(connectedWorlds);
+
+	al_draw_text(font, al_map_rgb(255,255,255), 340, 150, 0, "You LOST!");
+	al_draw_text(font, al_map_rgb(255,255,255), 315, 500, 0, "Click to exit!");
+	al_flip_display();
+
+	ALLEGRO_EVENT ev;
+
+	
+
+	do
+		al_wait_for_event(evQueue, &ev);
+	while(ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN);
 }
