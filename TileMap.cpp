@@ -136,6 +136,29 @@ void TileMap::draw()
 	}
 }
 
+void TileMap::update(Entity* target)
+{
+	double deltaX, deltaY, angle;
+
+	list<Entity*>::iterator it = objectsOnMap.begin();
+	while(it != objectsOnMap.end())
+	{
+		if(!(*it)->isPickUp())
+		{
+			deltaX = target->getX() - (*it)->getX();
+			deltaY = target->getY() - (*it)->getY();
+
+			angle = atan2(deltaY, deltaX);
+
+			(*it)->setVelocity_X(cos(angle)*15);
+			(*it)->setVelocity_Y(sin(angle)*15);
+
+			(*it)->update();
+		}
+		++it;
+	}
+}
+
 Entity* TileMap::checkCollisions(Entity* objectToCheck)
 {
 	int x0 = objectToCheck->getX();
@@ -148,19 +171,21 @@ Entity* TileMap::checkCollisions(Entity* objectToCheck)
 	list<Entity*>::iterator it = objectsOnMap.begin();
 	while(it != objectsOnMap.end())
 	{
-
-		x1 = (*it)->getX();
-		y1 = (*it)->getY();
-		width = (*it)->getWidth();
-		height  = (*it)->getHeight();
-
-		if( x0 < x1 + (*it)->getWidth() &&
-			x1 < x0 + objectToCheck->getWidth() &&
-			y0 < y1 + (*it)->getHeight() &&
-			y1 < y0 + objectToCheck->getHeight())
+		if(!(*it)->isDisposable())
 		{
-			if(objectToCheck->isPlayer() || !(*it)->isPickUp())
-				return (*it);
+			x1 = (*it)->getX();
+			y1 = (*it)->getY();
+			width = (*it)->getWidth();
+			height  = (*it)->getHeight();
+
+			if( x0 < x1 + (*it)->getWidth() &&
+				x1 < x0 + objectToCheck->getWidth() &&
+				y0 < y1 + (*it)->getHeight() &&
+				y1 < y0 + objectToCheck->getHeight())
+			{
+				if(objectToCheck->isPlayer() || !(*it)->isPickUp())
+					return (*it);
+			}
 		}
 
 		it++;

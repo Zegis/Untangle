@@ -17,6 +17,7 @@ public:
 	void LoadMap(string mapName);
 
 	void draw();
+	void update(Entity* target);
 
 	Entity* checkCollisions(Entity* objectToCheck);
 

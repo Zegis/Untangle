@@ -182,7 +182,7 @@ void Game::GameLoop()
 		{
 
 			al_hold_bitmap_drawing(true);
-			map->draw();
+			
 			player->update();
 
 			objectThatCollides = map->checkCollisions(player);
@@ -218,6 +218,8 @@ void Game::GameLoop()
 				}
 			}
 
+			map->update(player);
+			map->draw();
 			player->draw();
 
 			list<Entity*>::iterator it = bullets.begin();
