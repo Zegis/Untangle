@@ -130,8 +130,8 @@ Entity* Entity::shoot(int toX, int toY)
 
 	double angle = atan2(deltaY, deltaX);
 
-	bullet->setVelocity_X(cos(angle)*15);
-	bullet->setVelocity_Y(sin(angle)*15);
+	bullet->setVelocity_X(cos(angle)*45);
+	bullet->setVelocity_Y(sin(angle)*45);
 
 	return bullet;
 }

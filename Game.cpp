@@ -141,19 +141,19 @@ void Game::GameLoop()
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
-				player->setVelocity_X(-10);
+				player->setVelocity_X(-30);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_RIGHT)
 			{
-				player->setVelocity_X(10);
+				player->setVelocity_X(30);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_UP)
 			{
-				player->setVelocity_Y(-10);
+				player->setVelocity_Y(-30);
 			}
 			else if(currentEvent.keyboard.keycode == ALLEGRO_KEY_DOWN)
 			{
-				player->setVelocity_Y(10);
+				player->setVelocity_Y(30);
 			}
 		}
 		else if(currentEvent.type == ALLEGRO_EVENT_KEY_UP)
@@ -266,7 +266,7 @@ void Game::DisconnectWorlds(int worldToDisconnect)
 	
 	worlds->draw(connectedWorlds);
 	al_draw_text(font, al_map_rgb(255,255,255), 210, 150, 0, "You closed one connection!");
-	al_draw_text(font, al_map_rgb(255,255,255), 315, 500, 0, "Click to exit!");
+	al_draw_text(font, al_map_rgb(255,255,255), 315, 460, 0, "Click to continue!");
 	al_flip_display();
 
 	ALLEGRO_EVENT ev;
