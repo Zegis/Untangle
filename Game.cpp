@@ -20,7 +20,7 @@ Game::Game(void)
 
 		display = al_create_display(800,600);
 		evQueue = al_create_event_queue();
-		eventTimer = al_create_timer(1.0 / 60);
+		eventTimer = al_create_timer(1.0/ 5);
 
 		curs = al_create_mouse_cursor(al_load_bitmap("res/cursor.bmp"),0,0);
 		al_set_mouse_cursor(display,curs);
@@ -119,7 +119,6 @@ void Game::GameBriefing()
 void Game::GameLoop()
 {
 	ALLEGRO_EVENT currentEvent;
-	al_start_timer(eventTimer);
 
 	al_hold_bitmap_drawing(true);
 	player->draw();
@@ -129,11 +128,82 @@ void Game::GameLoop()
 
 	Entity* objectThatCollides;
 
+	bool redraw = false;
+
+	al_start_timer(eventTimer);
+
 	while(true)
 	{
 		al_wait_for_event(evQueue, &currentEvent);
 
-		if(currentEvent.type == ALLEGRO_EVENT_KEY_DOWN)
+		if(currentEvent.type == ALLEGRO_EVENT_TIMER)
+		{
+			redraw = true;
+
+			std::cout << "Logic update\n";
+
+			player->update();
+
+			objectThatCollides = map->checkCollisions(player);
+			if(objectThatCollides != NULL)
+			{
+				if(objectThatCollides->isPickUp())
+				{
+					std::cout << "Something picked up!";
+					--Worldcounter;
+					objectThatCollides->setDisposable();
+					if(Worldcounter > 0)
+					{
+					DisconnectWorlds(objectThatCollides->getPickUp_ID());
+
+					player->setVelocity_X(0);
+					player->setVelocity_Y(0);
+					}
+					else
+					{
+						GameWin();
+						break;
+					}
+				}
+				else
+				{
+					player->hit();
+					if(player->isDisposable())
+					{
+						std::cout << "UR DEAD!";
+						GameLost();
+						break;
+					}
+				}
+			}
+
+			map->update(player);
+
+			list<Entity*>::iterator it = bullets.begin();
+			while( it != bullets.end())
+			{
+				(*it)->update();
+
+				objectThatCollides = map->checkCollisions((*it));
+
+				if (objectThatCollides != NULL)
+				{
+					objectThatCollides->hit();
+					(*it)->setDisposable();					
+				}
+
+				if( (*it)->isDisposable())
+				{
+					delete (*it);
+					bullets.erase(it++);
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+		else if(currentEvent.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
 			if(currentEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 			{
@@ -178,77 +248,28 @@ void Game::GameLoop()
 		{
 			break;
 		}
-		else if(al_is_event_queue_empty(evQueue))
+		
+		
+		if(redraw && al_is_event_queue_empty(evQueue))
 		{
+			redraw = false;
 
-			al_hold_bitmap_drawing(true);
+			std::cout << "World draw!\n";
 			
-			player->update();
-
-			objectThatCollides = map->checkCollisions(player);
-			if(objectThatCollides != NULL)
-			{
-				if(objectThatCollides->isPickUp())
-				{
-					std::cout << "Something picked up!";
-					--Worldcounter;
-					objectThatCollides->setDisposable();
-					if(Worldcounter > 0)
-					{
-					DisconnectWorlds(objectThatCollides->getPickUp_ID());
-
-					player->setVelocity_X(0);
-					player->setVelocity_Y(0);
-					}
-					else
-					{
-						GameWin();
-						break;
-					}
-				}
-				else
-				{
-					player->hit();
-					if(player->isDisposable())
-					{
-						std::cout << "UR DEAD!";
-						GameLost();
-						break;
-					}
-				}
-			}
-
-			map->update(player);
 			map->draw();
 			player->draw();
 
 			list<Entity*>::iterator it = bullets.begin();
 			while( it != bullets.end())
 			{
-				(*it)->update();
-
-				objectThatCollides = map->checkCollisions((*it));
-
-				if (objectThatCollides != NULL)
-				{
-					objectThatCollides->hit();
-					(*it)->setDisposable();					
-				}
-
-				if( (*it)->isDisposable())
-				{
-					delete (*it);
-					bullets.erase(it++);
-				}
-				else
+				if((*it)->isDisposable() == false)
 				{
 					(*it)->draw();
-					++it;
 				}
+				++it;
 			}
 
-			al_hold_bitmap_drawing(false);
-			al_flip_display();
+			al_flip_display();			
 		}
 	}
 	al_hold_bitmap_drawing(false);
